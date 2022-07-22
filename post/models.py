@@ -66,7 +66,16 @@ class ApplyStatus(models.Model):
 
     def __str__(self):
         return self.status
+    
 
+class ProgressStatus(models.Model):
+    progress_status = models.CharField(max_length=30)
+
+    class Meta:
+        db_table = "progress_status"
+
+    def __str__(self):
+        return self.progress_status
 
 class JobPostActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
