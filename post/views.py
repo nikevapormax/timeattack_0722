@@ -77,7 +77,9 @@ class ApplyView(APIView):
 
     def post(self, request):
         request.data['user']= request.user.id
+        request.data["apply_status"] = 2
         apply_serialzer = JobPostActivitySerializer(data=request.data)
+        print(apply_serialzer)
         if apply_serialzer.is_valid():
             apply_serialzer.save()
             return Response(status=status.HTTP_200_OK)
