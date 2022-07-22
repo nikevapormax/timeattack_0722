@@ -4,15 +4,16 @@ from rest_framework import permissions, status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import (
+    ApplyStatus,
     JobPostSkillSet,
     JobType,
     JobPost,
-    Company
+    Company,
+    JobPostActivity
 )
 from .permissions import IsCandidateUser
 from .serializers import JobPostSerializer, JobPostActivitySerializer
 from django.db.models.query_utils import Q
-
 
 class SkillView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -75,11 +76,23 @@ class ApplyView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsCandidateUser]
 
+    def get(self, request):
+        apply_status = request.query_params.get("status", "")
+        user = request.user.id
+        
+        apply_status = ApplyStatus.objects.get(status=apply_status)
+        activity = JobPostActivity.objects.get(user=user, apply_status=apply_status)
+        print(activity)
+        
+        status_serialzer = JobPostActivitySerializer(activity).data
+        
+        return Response(status_serialzer, status=status.HTTP_200_OK)
+
     def post(self, request):
         request.data['user']= request.user.id
         request.data["apply_status"] = 2
         apply_serialzer = JobPostActivitySerializer(data=request.data)
-        print(apply_serialzer)
+
         if apply_serialzer.is_valid():
             apply_serialzer.save()
             return Response(status=status.HTTP_200_OK)
