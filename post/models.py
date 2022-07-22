@@ -77,11 +77,23 @@ class ProgressStatus(models.Model):
     def __str__(self):
         return self.progress_status
 
+
+class ProgressLog(models.Model):
+    progress_log = models.CharField(max_length=30)
+
+    class Meta:
+        db_table = "progress_log"
+
+    def __str__(self):
+        return self.progress_log
+
+
 class JobPostActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     job_post = models.ForeignKey(JobPost, on_delete=models.CASCADE, null=True)
     apply_date = models.DateTimeField(auto_now_add=True)
     apply_status = models.ForeignKey(ApplyStatus, on_delete=models.SET_NULL, null=True)
+    progress_log = models.ForeignKey(ProgressLog, on_delete=models.SET_NULL, null=True)
 
     class Meta:
         db_table = "job_post_activity"
