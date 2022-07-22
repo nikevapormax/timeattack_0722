@@ -68,11 +68,10 @@ class JobPostActivity(models.Model):
 
 
 class ApplyStatus(models.Model):
-    job_post_activity = models.ForeignKey(JobPostActivity, on_delete=models.CASCADE)
     status = models.CharField(max_length=30)
     
     class Meta:
         db_table = "apply_status"
-        
+
     def __str__(self):
-        return f'{self.job_post_activity} --> {self.status}'
+        return self.status
